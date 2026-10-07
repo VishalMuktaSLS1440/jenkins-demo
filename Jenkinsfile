@@ -17,13 +17,16 @@ pipeline {
 
         stage('SonarQube Scan') {
             steps {
-                withSonarQubeEnv('SonarQube') {
-                    bat """
-                    sonar-scanner ^
-                    -Dsonar.projectKey=jenkins-demo ^
-                    -Dsonar.sources=. ^
-                    -Dsonar.host.url=http://localhost:9000
-                    """
+                script {
+                    def scannerHome = tool 'SonarScanner'
+
+                    withSonarQubeEnv('SonarQube') {
+                        bat """
+                        "${scannerHome}\\bin\\sonar-scanner.bat" ^
+                        -Dsonar.projectKey=jenkins-demo ^
+                        -Dsonar.sources=.
+                        """
+                    }
                 }
             }
         }
