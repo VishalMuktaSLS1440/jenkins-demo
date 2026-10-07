@@ -12,19 +12,19 @@ pipeline {
         stage('Build') {
             steps {
                 echo 'Building Application'
-                bat 'dir'
             }
         }
 
-        stage('Test') {
+        stage('SonarQube Scan') {
             steps {
-                echo 'Running Tests'
-            }
-        }
-
-        stage('Archive') {
-            steps {
-                archiveArtifacts artifacts: '**/*'
+                withSonarQubeEnv('SonarQube') {
+                    bat """
+                    sonar-scanner ^
+                    -Dsonar.projectKey=jenkins-demo ^
+                    -Dsonar.sources=. ^
+                    -Dsonar.host.url=http://localhost:9000
+                    """
+                }
             }
         }
     }
