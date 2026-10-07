@@ -2,9 +2,17 @@ pipeline {
     agent any
 
     stages {
+
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+
         stage('Build') {
             steps {
                 echo 'Building Application'
+                bat 'dir'
             }
         }
 
@@ -13,6 +21,11 @@ pipeline {
                 echo 'Running Tests'
             }
         }
+
+        stage('Archive') {
+            steps {
+                archiveArtifacts artifacts: '**/*'
+            }
+        }
     }
 }
-
